@@ -11,12 +11,6 @@ import javax.inject.Inject
 @Module
 class PrefModule {
 
-//    @Provides
-//    @ApplicationScope
-//    internal fun providePrefInterface(app: Application): AppPreference {
-//        return AppPreference(app)
-//    }
-
     private val mApplication: Application
     @Inject
     constructor(application: Application) {
@@ -28,13 +22,4 @@ class PrefModule {
     fun provideAppPreference(): AppPreference {
         return AppPreference(mApplication)
     }
-
-//    @ApplicationScope
-//    @Provides
-//    fun providePreferences(): SharedPreferences {
-//        return context.getSharedPreferences(
-//            context.getString(R.string.app_name),
-//            Context.MODE_PRIVATE
-//        )
-//    }
 }

@@ -15,6 +15,7 @@ class SingleClickDialog : BaseDialog() {
 
         val ARG_TITLE = "ARG_TITLE"
         val ARG_DATA = "ARG_DATA"
+        val ARG_ISCANCEL = "ARG_ISCANCEL"
 
         fun newInstance(title: String, data: ArrayList<String>): SingleClickDialog {
             val args = Bundle()
@@ -28,10 +29,6 @@ class SingleClickDialog : BaseDialog() {
 
     internal var mListener: OnSelectedListener? = null
 
-    interface OnSelectedListener {
-        fun onSelect(position: Int)
-    }
-
     fun setOnSelectedListener(listener: OnSelectedListener) {
         mListener = listener
     }
@@ -40,6 +37,7 @@ class SingleClickDialog : BaseDialog() {
 
         val title = arguments!!.getString(ARG_TITLE)
         val data = arguments!!.getStringArrayList(ARG_DATA)
+        val isCancel = arguments!!.getBoolean(ARG_ISCANCEL)
 
         val charSequences = arrayOfNulls<CharSequence>(data!!.size)
         for (i in data.indices) {
@@ -48,7 +46,12 @@ class SingleClickDialog : BaseDialog() {
 
         return AlertDialog.Builder(activity!!)
             .setTitle(title)
+            .setCancelable(isCancel)
             .setItems(charSequences) { dialog, which -> mListener?.onSelect(which) }
             .create()
     }
+}
+
+interface OnSelectedListener {
+    fun onSelect(position: Int)
 }

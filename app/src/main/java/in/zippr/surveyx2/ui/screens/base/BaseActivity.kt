@@ -5,8 +5,7 @@ import `in`.zippr.surveyx2.common.AppConst
 import `in`.zippr.surveyx2.common.AppInstance
 import `in`.zippr.surveyx2.dependencyinjection.components.ControllerComponent
 import `in`.zippr.surveyx2.dependencyinjection.modules.ControllerModule
-import `in`.zippr.surveyx2.ui.dialogs.CustomDialog
-import `in`.zippr.surveyx2.ui.dialogs.ProgressDialog
+import `in`.zippr.surveyx2.ui.dialogs.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,17 +29,28 @@ import androidx.core.app.ActivityCompat
 import com.arpaul.utilitieslib.BuildConfig
 import com.arpaul.utilitieslib.PermissionUtils
 import com.arpaul.utilitieslib.ValidationUtils
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.ArrayList
 
 abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
 
     private var progressDialog: ProgressDialog? = null
     private var customDialog: CustomDialog? = null
+    private var singleDialog: SingleClickDialog? = null
     private var mIsControllerComponentUsed = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    lateinit var mDialogsManager: DialogsManager
+    lateinit var mDialogsFactory: DialogsFactory
+    lateinit var controller: ControllerComponent
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        controller = getControllerComponent()
+        controller.injectActivity(this)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
+
+        mDialogsFactory = controller.getDialogsFactory()
+        mDialogsManager = controller.getDialogManager()
     }
 
     override fun onStart() {
@@ -125,8 +135,12 @@ abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
 
     fun showLoader(isCancelable: Boolean, is_from: String) {
         try {
-            progressDialog = ProgressDialog(this, isCancelable)
-            runOnUiThread(progressDialog)
+            progressDialog = mDialogsFactory.progressDialog(isCancelable)
+            controller.injectDialog(progressDialog!!)
+            mDialogsManager.showDialog(progressDialog!!, null)
+
+//            progressDialog = ProgressDialog(this, isCancelable)
+//            runOnUiThread(progressDialog)
         } catch (e: Exception) {
 //            Crashlytics.log(Log.ERROR, "Loader without title", is_from)
         }
@@ -139,10 +153,14 @@ abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
      * @param message
      * @param isCancelable
      */
-    fun showLoader(title: String, message: String, isCancelable: Boolean, is_from: String) {
+    fun showLoader(title: String, message: String, isCancelable: Boolean) {
         try {
-            progressDialog = ProgressDialog(this, title, message, isCancelable)
-            runOnUiThread(progressDialog)
+            progressDialog = mDialogsFactory.progressDialog(title, message, isCancelable, false)
+            controller.injectDialog(progressDialog!!)
+            mDialogsManager.showDialog(progressDialog!!, null)
+
+//            progressDialog = ProgressDialog(this, title, message, isCancelable)
+//            runOnUiThread(progressDialog)
         } catch (e: Exception) {
 //            Crashlytics.log(Log.ERROR, "Loader without title", is_from)
         }
@@ -157,8 +175,15 @@ abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
      * @param isCancelable
      */
     fun showLoader(title: String, message: String, progress: Int, isCancelable: Boolean) {
-        progressDialog = ProgressDialog(this, title, message, progress, isCancelable)
-        runOnUiThread(progressDialog)
+        try {
+            progressDialog = mDialogsFactory.progressDialog(title, message, progress, isCancelable, false)
+            controller.injectDialog(progressDialog!!)
+            mDialogsManager.showDialog(progressDialog!!, null)
+        } catch (e: Exception) {
+
+        }
+//        progressDialog = ProgressDialog(this, title, message, progress, isCancelable)
+//        runOnUiThread(progressDialog)
     }
 
     fun hideLoader() {
@@ -190,12 +215,13 @@ abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
         message: String,
         okButton: String,
         noButton: String,
+        neutralButton: String,
         from: String,
-        isCancelable: Boolean,
-        is_from: String
+        isCancelable: Boolean
     ) {
-        customDialog = CustomDialog(this, title, message, okButton, noButton, from, isCancelable, this)
-        runOnUiThread(customDialog)
+        customDialog = mDialogsFactory.customDialog(title, message, okButton, noButton, neutralButton, from, isCancelable, this)
+        controller.injectDialog(customDialog!!)
+        mDialogsManager.showDialog(customDialog!!, null)
     }
 
     fun hideCustomDialog() {
@@ -218,13 +244,48 @@ abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
     }
 
     override fun dialogYesClick(from: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (from.equals("", ignoreCase = true)) {
+
+        }
     }
 
     override fun dialogNoClick(from: String) {
         if (from.equals("", ignoreCase = true)) {
 
         }
+    }
+
+    override fun dialogNeutralClick(from: String) {
+        if (from.equals("", ignoreCase = true)) {
+
+        }
+    }
+
+    /**
+     * Shows Single click string list
+     *
+     * @param title
+     * @param list
+     * @param isCancelable
+     * @param selectlistener
+     */
+    fun showSingleClickListDialog(
+        title: String,
+        list: ArrayList<String>,
+        isCancelable: Boolean,
+        listener: OnSelectedListener
+    ) {
+        singleDialog = mDialogsFactory.singleClickDialog(title, list, isCancelable)
+        singleDialog!!.setOnSelectedListener(listener)
+
+//        (object : SingleClickDialog.OnSelectedListener {
+//            override fun onSelect(position: Int) {
+//                tvText.text = list.get(position)
+//            }
+//        })
+
+        controller.injectDialog(singleDialog!!)
+        mDialogsManager.showDialog(singleDialog!!, null)
     }
 
     fun getParentView(v: View?): ViewGroup? {
@@ -282,7 +343,7 @@ abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {
             val shareIntent: Intent
             shareIntent = Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Ekkada");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
             var shareMessage = "\nLet me recommend you this application\n\n" as String
             shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" +
                     BuildConfig.APPLICATION_ID + "\n\n";

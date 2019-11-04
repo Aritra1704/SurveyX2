@@ -1,9 +1,7 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -32,6 +30,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 kapt {
@@ -48,6 +49,7 @@ dependencies {
     def ver_RxJava = '2.1.15'
     def ver_RxAndroid = '2.0.2'
     def ver_anko = '0.10.8'
+    def ver_databinding = '3.5.1'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -69,14 +71,18 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$ver_Dagger"
     kapt "com.google.dagger:dagger-android-support:$ver_Dagger"
 
+    //Databinding
+    kapt "com.android.databinding:compiler:$ver_databinding"
+
     //Rx
     implementation "io.reactivex.rxjava2:rxjava:$ver_RxJava"
     implementation "io.reactivex.rxjava2:rxandroid:$ver_RxAndroid"
 
     // LiveData and ViewModel
     implementation "android.arch.lifecycle:extensions:$ver_LiveData"
+    implementation "android.arch.lifecycle:runtime:$ver_LiveData"
     annotationProcessor "android.arch.lifecycle:compiler:$ver_LiveData"
-
+    kapt "android.arch.lifecycle:compiler:$ver_LiveData"
     // Room (use 1.1.0-rc1 for latest version)
 //    implementation "android.arch.persistence.room:runtime:$ver_LiveData"
 //    annotationProcessor "android.arch.persistence.room:compiler:$ver_LiveData"

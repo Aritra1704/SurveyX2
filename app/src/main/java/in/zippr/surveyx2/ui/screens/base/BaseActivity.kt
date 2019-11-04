@@ -29,7 +29,7 @@ import androidx.core.app.ActivityCompat
 import com.arpaul.utilitieslib.BuildConfig
 import com.arpaul.utilitieslib.PermissionUtils
 import com.arpaul.utilitieslib.ValidationUtils
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_splash.*
 import java.util.ArrayList
 
 abstract class BaseActivity : AppCompatActivity(), CustomDialog.DialogClick {

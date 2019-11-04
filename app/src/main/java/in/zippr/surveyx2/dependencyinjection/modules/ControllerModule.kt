@@ -1,12 +1,9 @@
 package `in`.zippr.surveyx2.dependencyinjection.modules
 
-import `in`.zippr.surveyx2.ui.dialogs.BaseRunnable
 import `in`.zippr.surveyx2.ui.dialogs.DialogsFactory
 import `in`.zippr.surveyx2.ui.dialogs.DialogsManager
 import android.app.Activity
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import dagger.Module

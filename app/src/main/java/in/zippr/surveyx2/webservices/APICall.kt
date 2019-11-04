@@ -1,19 +1,20 @@
 package `in`.zippr.surveyx2.webservices
 
-import `in`.zippr.surveyx2.dependencyinjection.data.User
+import `in`.zippr.surveyx2.models.request.LoginRequest
+import `in`.zippr.surveyx2.models.response.ApiResponse
+import `in`.zippr.surveyx2.models.response.UserResponse
 import io.reactivex.Observable
-import io.reactivex.Single
-import retrofit2.http.GET
+import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
-import java.util.ArrayList
 
 interface APICall {
-    @GET("employees")
-    abstract fun getAllEmployees(): Observable<ArrayList<User>>
+    @POST("/login")
+    abstract fun performLogin(@Header("x-zippr-api-key") apikey: String,  @Body userId: LoginRequest): Observable<ApiResponse<UserResponse>>
 
-    @GET("employee/:id")
-    abstract fun getOneEmployees(id: String): Single<User>
-
-    @POST("create")
-    abstract fun createEmployee(employee: User): Single<User>
+//    @GET("employee/:id")
+//    abstract fun getOneEmployees(id: String): Single<User>
+//
+//    @POST("create")
+//    abstract fun createEmployee(employee: User): Single<User>
 }

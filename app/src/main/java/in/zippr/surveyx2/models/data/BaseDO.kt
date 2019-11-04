@@ -1,4 +1,4 @@
-package `in`.zippr.surveyx2.dependencyinjection.data
+package `in`.zippr.surveyx2.models.data
 
 open class BaseDO : Cloneable {
     @Throws(CloneNotSupportedException::class)

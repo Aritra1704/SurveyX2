@@ -14,7 +14,7 @@ class AppInstance  : Application() {
 
     val TAG = AppInstance::class.java.simpleName
 
-//    @Inject
+    @Inject
     lateinit var appPref: AppPreference
 
     @Inject
@@ -32,7 +32,7 @@ class AppInstance  : Application() {
         component.inject(this)
         super.onCreate()
 
-        appPref = component.getAppPref()
+//        appPref = component.getAppPref()
     }
 
     @UiThread

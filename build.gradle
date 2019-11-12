@@ -8,7 +8,7 @@ buildscript {
         
     }
     dependencies {
-        def ver_databinding = '3.5.1'
+        def ver_databinding = '3.5.2'
         classpath "com.android.tools.build:gradle:$ver_databinding"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong

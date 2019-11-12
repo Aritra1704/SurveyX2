@@ -4,7 +4,7 @@ import com.arpaul.utilitieslib.LogUtils
 
 class MyLogger {
 
-    lateinit var logger: LogUtils
+    var logger: LogUtils
     constructor(isLogEnabled: Boolean) {
         logger = LogUtils(isLogEnabled)
     }

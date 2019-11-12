@@ -1,6 +1,6 @@
 package `in`.zippr.surveyx2.dependencyinjection.modules
 
-import `in`.zippr.surveyx2.dependencyinjection.scopes.ViewModelScope
+import `in`.zippr.surveyx2.dependencyinjection.scopes.RepositoryScope
 import `in`.zippr.surveyx2.webservices.APICall
 import `in`.zippr.surveyx2.webservices.RetrofitService
 import dagger.Module
@@ -16,7 +16,7 @@ class RetrofitModule {
      * @return the Post service implementation.
      */
     @Provides
-    @ViewModelScope
+    @RepositoryScope
     internal fun providePostApi(retrofit: Retrofit): APICall = retrofit.create(APICall::class.java)
 
 
@@ -25,7 +25,7 @@ class RetrofitModule {
      * @return the Retrofit object
      */
     @Provides
-    @ViewModelScope
+    @RepositoryScope
     internal fun provideRetrofitInterface(): Retrofit {
         return RetrofitService().retrofit
     }

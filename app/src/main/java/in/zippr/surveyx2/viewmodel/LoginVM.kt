@@ -1,12 +1,15 @@
 package `in`.zippr.surveyx2.viewmodel
 
 import `in`.zippr.surveyx2.R
+import `in`.zippr.surveyx2.dependencyinjection.components.AppComponent
 import `in`.zippr.surveyx2.models.request.LoginRequest
 import `in`.zippr.surveyx2.models.response.*
 import `in`.zippr.surveyx2.repositories.login.LoginRepo
+import `in`.zippr.surveyx2.repositories.login.LoginRepoImpl
 import `in`.zippr.surveyx2.utils.IdResourceString
 import `in`.zippr.surveyx2.utils.ResourceString
 import `in`.zippr.surveyx2.utils.SingleLiveEvent
+import android.app.Application
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -16,7 +19,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 
-class LoginVM constructor(val loginRepo: LoginRepo) : BaseVM() {
+class LoginVM(): BaseVM() {// constructor(val loginRepo: LoginRepo)
 
     val showLoader = MutableLiveData<Int>()
 //    var usersLD: MutableLiveData<Resource<UserResponse>>
@@ -31,8 +34,10 @@ class LoginVM constructor(val loginRepo: LoginRepo) : BaseVM() {
     val userIdWatcher = ObservableField<TextWatcher>()
     val passwordWatcher = ObservableField<TextWatcher>()
 
+//    val loginRepo = LoginRepoImpl// = baseRepo
 
     init {
+        val loginRepo = LoginRepoImpl()// = baseRepo
         userRequest = MutableLiveData()
         loginRepo.performLogin2(userRequest.value!!, usersResponse)
         usersLD = Transformations.switchMap(loadData) {
@@ -48,19 +53,6 @@ class LoginVM constructor(val loginRepo: LoginRepo) : BaseVM() {
                     showLoader.value = View.GONE
                 })
         }
-//        usersLD = Transformations.switchMap(loadData) {
-//            switchMaporLoginResponse(loginRepo.performLogin2(userRequest.value!!),
-//                doOnSuccess = {
-//                    showLoader.value = View.GONE
-//                    return@switchMaporLoginResponse it
-//                },
-//                doOnSubscribe = {
-//                    showLoader.value = View.VISIBLE
-//                },
-//                doOnError = {
-//                    showLoader.value = View.GONE
-//                })
-//        }
         userIdWatcher.set(object: TextWatcher {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -87,6 +79,7 @@ class LoginVM constructor(val loginRepo: LoginRepo) : BaseVM() {
         })
     }
 
+    @Override
     fun performLogin() {
         if(validateUserId())
             loadData.call()

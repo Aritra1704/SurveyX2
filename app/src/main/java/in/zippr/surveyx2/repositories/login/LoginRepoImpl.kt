@@ -1,5 +1,6 @@
 package `in`.zippr.surveyx2.repositories.login
 
+import `in`.zippr.surveyx2.dependencyinjection.components.AppComponent
 import `in`.zippr.surveyx2.models.request.LoginRequest
 import `in`.zippr.surveyx2.models.response.ApiResponse
 import `in`.zippr.surveyx2.models.response.UserResponse
@@ -9,21 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class LoginRepoImpl: BaseRepo(), LoginRepo {
-
-//    override fun performLogin(value: LoginRequest): LiveData<ApiResponse<UserResponse>> {
-//
-//        subscription = apiCall.performLogin(value.userId, value.password)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnSubscribe { onApiLoading("GET_ALL") }
-//            .subscribe(
-//                { result -> onEmployeesSuccess(result) },
-//                { error -> onEmployeesError(error) }
-//            )
-//        compositeDisposable.add(subscription)
-//        return subscription.
-//    }
+class LoginRepoImpl(): BaseRepo(), LoginRepo {
 
     override fun performLogin2(value: LoginRequest, usersResponse: MutableLiveData<ApiResponse<UserResponse>>) {
         subscription = apiCall.performLogin("", value)
@@ -36,7 +23,4 @@ class LoginRepoImpl: BaseRepo(), LoginRepo {
             )
         compositeDisposable.add(subscription)
     }
-//    override fun performLogin(value: LoginRequest?): LiveData<ApiResponse<UserResponse>> {
-//
-//    }
 }

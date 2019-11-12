@@ -20,7 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.screens.LoginActivity">
+        tools:context=".ui.screens.login.LoginActivity">
 
         <Button
             android:id="@+id/btnLogin"
@@ -31,8 +31,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            bind:clickListener="@{vm.performLogin()}"
-            bind:response="@{vm.usersLD}" />
+            android:onClick="@{() -> vm.performLogin()}" />
 
         <EditText
             android:id="@+id/edtPassword"

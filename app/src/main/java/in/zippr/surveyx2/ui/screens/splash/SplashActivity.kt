@@ -3,13 +3,11 @@ package `in`.zippr.surveyx2.ui.screens.splash
 import `in`.zippr.surveyx2.BuildConfig
 import `in`.zippr.surveyx2.R
 import `in`.zippr.surveyx2.ui.dialogs.*
-import `in`.zippr.surveyx2.ui.screens.LoginActivity
+import `in`.zippr.surveyx2.ui.screens.login.LoginActivity
 import `in`.zippr.surveyx2.ui.screens.base.BaseActivity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
-import androidx.core.os.HandlerCompat
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.util.ArrayList
 
@@ -36,7 +34,7 @@ class SplashActivity : BaseActivity() {
         }, timeout.toLong())
     }
 
-    fun onClicked(view: View) {
+    fun onClicked() {
         val list = ArrayList<String>()
         list.add("Test1")
         list.add("Test2")
